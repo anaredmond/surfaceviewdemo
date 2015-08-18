@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/rocket"
+        android:layout_width="180dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:layout_weight="0.5"
+        android:scaleType="centerInside"
+        android:text="Rocket"
+        android:textSize="40dp" />
+
+    <Button
+        android:id="@+id/pageturn"
+        android:layout_width="180dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_margin="40dp"
+        android:layout_weight="0.5"
+        android:scaleType="centerInside"
+        android:text="Page Turn"
+        android:textSize="40dp" />
+</LinearLayout>
