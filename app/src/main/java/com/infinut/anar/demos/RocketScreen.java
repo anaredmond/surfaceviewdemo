@@ -89,8 +89,10 @@ public class RocketScreen extends Screen {
 
     private boolean restartAnimation() {
         //rocket out of screen
-        if (bounds.right < 0 || bounds.left > screenWidth || bounds.top > screenHeight || bounds.bottom < 0) {
-            return true;
+        if (!burst) {
+            if (bounds.right < 0 || bounds.left > screenWidth || bounds.top > screenHeight || bounds.bottom < 0) {
+                return true;
+            }
         }
         //all stars out of screen
         if(burst) {
@@ -99,8 +101,10 @@ public class RocketScreen extends Screen {
                     return false;
                 }
             }
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     private void startRocket() {
