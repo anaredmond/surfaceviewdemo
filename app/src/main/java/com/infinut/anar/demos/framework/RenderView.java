@@ -12,19 +12,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Manages a rendering thread.
  */
-public abstract class RenderView extends SurfaceView implements Runnable {
+public abstract class RenderView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
     Thread renderThread = null;
     SurfaceHolder holder;
     protected Screen screen;
     protected TouchHandler touchHandler;
     AtomicBoolean running = new AtomicBoolean();
+    AtomicBoolean render = new AtomicBoolean();
 
     public RenderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         holder = getHolder();
+        holder.addCallback(this);
         touchHandler = new TouchHandler();
         running.set(false);
+        render.set(false);
     }
 
     public void resume() {
@@ -36,12 +39,14 @@ public abstract class RenderView extends SurfaceView implements Runnable {
     }
 
     public void run() {
+        while(!render.get()) //check can render first.
+            continue;
+        //surface has been initialized
         screen.init();
         long startTime = System.nanoTime();
         while (running.get()) {
-            if (!holder.getSurface().isValid())
+            if(!render.get())
                 continue;
-
             float deltaTime = (System.nanoTime() - startTime) / 1000000000.0f;
             startTime = System.nanoTime();
 
@@ -74,5 +79,20 @@ public abstract class RenderView extends SurfaceView implements Runnable {
     public boolean onTouchEvent(MotionEvent event) {
 
         return touchHandler.onTouch(this, event);
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        render.set(false);
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        render.compareAndSet(false, true);
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        render.set(false);
     }
 }
